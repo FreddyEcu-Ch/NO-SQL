@@ -1,6 +1,7 @@
 #Importación de librerias necesarias para conexión con Cassandra y gestión de fechas
 from cassandra.cluster import Cluster
 from datetime import date
+
 #Parte 1: Definición de clases de las entidades y relaciones
 class Cliente:
     def __init__(self, IdCliente, Nombre, DNI, Direccion):
