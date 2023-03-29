@@ -11,76 +11,76 @@ from datetime import date
 
 # Parte 1: Definición de clases de las entidades y relaciones
 class Sucursal:
-    def __init__(self, id, Nombre, Ciudad, Activo):  # Constructor de entidad Sucursal
-        self.Nombre = Nombre
-        self.Ciudad = Ciudad
-        self.Activo = Activo
-        self.id = id
+    def __init__(self, Sucursal_id, Sucursal_Nombre, Sucursal_Ciudad, Sucursal_Activo):  # Constructor de entidad Sucursal
+        self.Sucursal_Nombre = Sucursal_Nombre
+        self.Sucursal_Ciudad = Sucursal_Ciudad
+        self.Sucursal_Activo = Sucursal_Activo
+        self.Sucursal_id = Sucursal_id
 
 
 class Cuenta:
-    def __init__(self, Numero, Saldo, Servicios, id):  # Constructor con relación 1:n entre Sucursal y Cuenta
-        self.Numero = Numero
-        self.Saldo = Saldo
-        self.Servicios = Servicios
-        self.id = id
+    def __init__(self, Cuenta_Numero, Cuenta_Saldo, Cuenta_Servicios, Sucursal_id):  # Constructor con relación 1:n entre Sucursal y Cuenta
+        self.Cuenta_Numero = Cuenta_Numero
+        self.Cuenta_Saldo = Cuenta_Saldo
+        self.Cuenta_Servicios = Cuenta_Servicios
+        self.Sucursal_id = Sucursal_id
 
 
 class CuentaBen:
-    def __init__(self, Numero, DNIPasaporte):  # Constructor de relación n:m entre Cuenta y Beneficiario
-        self.Numero = Numero
-        self.DNIPasaporte = DNIPasaporte
+    def __init__(self, Cuenta_Numero, Beneficiario_DNIPasaporte):  # Constructor de relación n:m entre Cuenta y Beneficiario
+        self.Cuenta_Numero = Cuenta_Numero
+        self.Beneficiario_DNIPasaporte = Beneficiario_DNIPasaporte
 
 
 class Beneficiario:
-    def __init__(self, Nombre, DNIPasaporte):  # Constructor de entidad Beneficiario
-        self.Nombre = Nombre
-        self.DNIPasaporte = DNIPasaporte
+    def __init__(self, Beneficiario_Nombre, Beneficiario_DNIPasaporte):  # Constructor de entidad Beneficiario
+        self.Beneficiario_Nombre = Beneficiario_Nombre
+        self.Beneficiario_DNIPasaporte = Beneficiario_DNIPasaporte
 
 
 class CuenTar:
-    def __init__(self, Numero, Nombre, Limite):  # Constructor de relación n:m entre Cuenta y Tarjeta
-        self.Numero = Numero
-        self.Nombre = Nombre
+    def __init__(self, Cuenta_Numero, Tarjeta_Nombre, Limite):  # Constructor de relación n:m entre Cuenta y Tarjeta
+        self.Cuenta_Numero = Cuenta_Numero
+        self.Tarjeta_Nombre = Tarjeta_Nombre
         self.Limite = Limite
 
 
 class Tarjeta:
-    def __init__(self, Nombre, Tipo):  # Constructor de entidad Tarjeta
-        self.Nombre = Nombre
-        self.Tipo = Tipo
+    def __init__(self, Tarjeta_Nombre, Tarjeta_Tipo):  # Constructor de entidad Tarjeta
+        self.Tarjeta_Nombre = Tarjeta_Nombre
+        self.Tarjeta_Tipo = Tarjeta_Tipo
 
 
 class CuenCli:
-    def __init__(self, Numero, DNIPasaporte):  # Constructor de relación n:m entre Cuenta y Cliente
-        self.Numero = Numero
-        self.DNIPasaporte = DNIPasaporte
+    def __init__(self, Cuenta_Numero, Cliente_DNIPasaporte):  # Constructor de relación n:m entre Cuenta y Cliente
+        self.Cuenta_Numero = Cuenta_Numero
+        self.Cliente_DNIPasaporte = Cliente_DNIPasaporte
 
 
 class Cliente:
-    def __init__(self, DNIPasaporte, Nombre, Calle, Ciudad):  # Constructor de entidad Cliente
-        self.DNIPasaporte = DNIPasaporte
-        self.Nombre = Nombre
-        self.Calle = Calle
-        self.Ciudad = Ciudad
+    def __init__(self, Cliente_DNIPasaporte, Cliente_Nombre, Cliente_Calle, Cliente_Ciudad):  # Constructor de entidad Cliente
+        self.Cliente_DNIPasaporte = Cliente_DNIPasaporte
+        self.Cliente_Nombre = Cliente_Nombre
+        self.Cliente_Calle = Cliente_Calle
+        self.Cliente_Ciudad = Cliente_Ciudad
 
 
 class CliPres:
-    def __init__(self, DNIPasaporte, Numero):  # Constructor de relación n:m entre Cliente y Prestamo
-        self.DNIPasaporte = DNIPasaporte
-        self.Numero = Numero
+    def __init__(self, Cliente_DNIPasaporte, Prestamo_Numero):  # Constructor de relación n:m entre Cliente y Prestamo
+        self.DNIPasaporte = Cliente_DNIPasaporte
+        self.Prestamo_Numero = Prestamo_Numero
 
 
 class Prestamo:
-    def __init__(self, Numero, Cantidad, id):  # Constructor con relación 1:n entre Sucursal y Prestamo
-        self.Numero = Numero
-        self.Cantidad = Cantidad
-        self.id = id
+    def __init__(self, Prestamo_Numero, Prestamo_Cantidad, Sucursal_id):  # Constructor con relación 1:n entre Sucursal y Prestamo
+        self.Prestamo_Numero = Prestamo_Numero
+        self.Prestamo_Cantidad = Prestamo_Cantidad
+        self.Sucursal_id = Sucursal_id
 
 
 # Parte 2: Creación de tablas soporte
 def SoporteBeneficiario(DNIPasaporte):
-    select = session.prepare("SELECT * FROM beneficiario_por_id WHERE id = ?")  # solo va a devolver una filia pero lo tratamos como si fuesen varias
+    select = session.prepare("SELECT * FROM cliente_por_dni WHERE id = ?")  # solo va a devolver una filia pero lo tratamos como si fuesen varias
     filas = session.execute (select, [DNIPasaporte, ])   # Importante, aunque solo haya un valor a reemplazar en el preparedstatemente, hay que poner la ','
     for fila in filas:
         c = Cliente(DNIPasaporte, fila.nombre, fila.calle,  fila.ciudad)  # creamos instancia del cliente
@@ -89,7 +89,7 @@ def SoporteBeneficiario(DNIPasaporte):
 
 def SoporteCuenta(Numero):
     select = session.prepare("SELECT * FROM cuenta_por_numero WHERE numero = ?")  # solo va a devolver una filia pero lo tratamos como si fuesen varias
-    filas = session.execute (select, [Numero, ])   # Importante, aunque solo haya un valor a reemplazar en el preparedstatemente, hay que poner la ','
+    filas = session.execute(select, [Numero, ])   # Importante, aunque solo haya un valor a reemplazar en el preparedstatemente, hay que poner la ','
     for fila in filas:
         cu = Cuenta(Numero, fila.saldo, fila.servicios, fila.id)  # creamos instancia de la cuenta
         return cu
@@ -97,31 +97,139 @@ def SoporteCuenta(Numero):
 
 def SoporteSucursal(id):
     select = session.prepare("SELECT * FROM sucursal_por_id WHERE id = ?")  # solo va a devolver una filia pero lo tratamos como si fuesen varias
-    filas = session.execute (select, [id, ])   # Importante, aunque solo haya un valor a reemplazar en el preparedstatemente, hay que poner la ','
+    filas = session.execute(select, [id, ])   # Importante, aunque solo haya un valor a reemplazar en el preparedstatemente, hay que poner la ','
     for fila in filas:
         s = Cuenta(id, fila.nombre, fila.ciudad, fila.activo)  # creamos instancia de las sucursales
         return s
 
 
 # Parte 3: Métodos para inserción de datos
+def insertCuenta(): # Método para insertar datos en entidad Cuenta
+    #Pedimos al usuario del programa los datos de la cuenta bancaria
+    numero = int(input("Dame el numero de cuenta"))
+    saldo = int(input("Dame el saldo actual"))
+    id = input("Dame el id de la sucursal")
+    servicios = set()  # iniciamos la colección (set) que contendrá los servicios a insertar
+    servicio = input("Introduzca una servicio, vacío para parar")
+    while servicio != "":
+        servicios.add(servicio)
+        servicio = input("Introduzca un servicio, vacío para parar")
+
+    cu = Cuenta(numero, saldo, servicios, id)
+    # Insertar datos en tabla SoporteCuenta
+    insertStatementSo = session.prepare("INSERT INTO cuenta_por_numero(numero, saldo, servicios, id) VALUES (?, ?, ?, ?)")
+    session.execute(insertStatementSo, [cu.Cuenta_Numero, cu.Cuenta_Saldo, cu.Cuenta_Servicios, cu.Sucursal_id])
 
 
+def insertSucursal():  # Método para insertar datos en entidad Sucursal
+    #Pedimos al usuario del programa los datos de la sucursal
+    nombre = int(input("Dame el nombre de la sucursal"))
+    id = input("Dame el id de la sucursal")
+    ciudad = input("Dame el nombre de la ciudad del activo")
+    activo = bool(input("Introduzca el activo"))
+    su = Sucursal(id, nombre, ciudad, activo)
+
+    # Insertar datos en tabla SoporteSucursal
+    insertStatementSoSu = session.prepare("INSERT INTO sucursal_por_id(Sucursal_id, Sucursal_Nombre, Sucursal_Ciudad, Sucursal_Activo) VALUES (?, ?, ?, ?)")
+    session.execute(insertStatementSoSu, [su.Sucursal_id, su.Sucursal_Nombre, su.Sucursal_Activo, su.Sucursal_Activo])
 
 
+def insertBeneficiario():  # Método para insertar datos en entidad Beneficiario
+    #Pedimos al usuario del programa los datos de la sucursal
+    nombreBe = input("Dame el nombre del beneficiario")
+    nombreCli = input("Dame el nombre del cliente")
+    dniBe = input("Dame el dni")
+    dniCli = input("Dame el dni del cliente")
+    calle = input("Dame el nombre de la calle")
+    ciudad = input("Dame el nombre de la ciudad")
+    b = Beneficiario(nombreBe, dniBe)
+    cli = Cliente(dniCli, nombreCli, calle, ciudad)
+
+    # Insertar datos en tabla SoporteBeneficiario
+    insertStatementSoBe = session.prepare("INSERT INTO cliente_por_dni(Cliente_DNI, Cliente_Nombre, Cliente_Calle, Cliente_Ciudad) VALUES (?, ?, ?, ?)")
+    session.execute(insertStatementSoBe, [cli.Cliente_DNIPasaporte, cli.Cliente_Nombre, cli.Cliente_Calle, cli.Cliente_Ciudad])
 
 
+def insertClienteCuentaSucursal():  # Método para insertar datos en consulta 3
+    # Pedimos al usuario del programa los datos del cliente, cuenta con sus sucursales asociadas
+    dni = input("Dame el dni del cliente")
+    numero = int(input ("Dame el número de cuenta"))
+    id = input("Dame la id de la sucursal")
+    saldo = int(input("Dame el saldo de la cuenta"))
+    nombre = input("Dame el nombre del cliente")
+    nombreSu = input("Dame el nombre de la sucursal")
+    ciudad = input ("Dame el nombre de la ciudad de la sucursal")
+
+    # Insertar instancias para la consulta 3
+    insertStatementCliCuSu = session.prepare("INSERT INTO tabla3(Cliente_DNI, Cuenta_Numero, Sucursal_id, Cuenta_Saldo, Cliente_Nombre, Sucursal_Ciudad, Sucursal_Nombre) VALUES (?, ?, ?, ?, ?, ?, ?)")
+    session.execute(insertStatementCliCuSu, [dni, numero, nombre, id, saldo, nombre, ciudad, nombreSu])
 
 
+def insertCuentaClienteBeneficiario():
+    # Pedimos al usuario del programa los datos de un número de cuenta para obtener su información de clientes y beneficiarios
+    numero = int(input("Dame el numero de cuenta"))
+    dniBe = input("Dame el dni del beneficiario")
+    dniCli = input("Dame el dni del cliente")
+    nombreBe = input("Dame el nombre del beneficiario")
+    nombre_Cli = input("Dame el nombre del cliente")
+    saldo = int(input("Dame el saldo de la cuenta"))
+
+    # Insertar instancias para la consulta 2
+    insertStatementCuCliBe = session.prepare("INSERT INTO tabla2(Cuenta_Numero, Beneficiario_DNI, Cliente_DNI, Beneficiario_Nombre, Cliente_Nombre, Cuenta_Saldo) VALUES (?, ?, ?, ?)")
+    session.execute(insertStatementCuCliBe, [numero, dniBe, dniCli, nombreBe, nombre_Cli, saldo])
 
 
+def insertBeneficiarioCuentaSucursal():
+    # Pedimos al usuario del programa los datos de un número de cuenta para obtener su información de clientes y beneficiarios
+    nombre = input("Dame el nombre de la sucursal")
+    numero = int(input("Dame el numero de cuenta"))
+    dni = input("Dame el dni del beneficiario")
+    nombreBe = input("Dame el nombre del beneficiario")
+    saldo = int(input("Dame el saldo de la cuenta"))
+
+    # Insertar instancias para la consulta 5
+    insertStatementBeCuSu = session.prepare("INSERT INTO tabla5(Sucursal_Nombre, Cuenta_Numero, Beneficiario_DNI, Beneficiario_Nombre, Saldo_Cuenta) VALUES (?, ?, ?, ?, ?)")
+    session.execute(insertStatementBeCuSu, [nombre, numero, dni, nombreBe, saldo])
 
 
+# Inserción en relación Cuente Cliente (Depositante)
+def insertDepositante():
+    # Pedimos al usuario del programa los datos de un número de cuenta para obtener su información de clientes
+    numero = int(input("Dame el numero de la cuenta"))
+    dni = input("Dame el dni del cliente")
+    depo = CuenCli(numero, dni)
+
+    # Insertar instancias para la relación depositante
+    insertStatementDe = session.prepare("INSERT INTO depositante(Cuenta_Numero, Cliente_DNI) VALUES (?, ?)")
+    session.execute(insertStatementDe, [depo.Cuenta_Numero, depo.Cliente_DNIPasaporte])
 
 
+# Inserción en relación Cuente Tarjeta (DetalleTar)
+def insertDetalleTar():
+    # Pedimos al usuario del programa los datos de un número de cuenta para información de las tarjetas asociadas
+    numero = int(input("Dame el numero de la cuenta"))
+    nombre = input("Dame el nombre de la tarjeta")
+    limite = float(input("Dame el límite de la tarjeta"))
+    tar = CuenTar(numero, nombre, limite)
+
+    # Insertar instancias para la relación depositante
+    insertStatementar = session.prepare("INSERT INTO detalletar(Cuenta_Numero, Tarjeta_Nombre, Limite) VALUES (?, ?, ?)")
+    session.execute(insertStatementar, [tar.Cuenta_Numero, tar.Tarjeta_Nombre, tar.Limite])
 
 
+# Inserción en relación Cuente Beneficiario (CuBen)
+def insertCuBen():
+    # Pedimos al usuario del programa los datos de un número de cuenta para información de las tarjetas asociadas
+    numero = int(input("Dame el numero de la cuenta"))
+    dni = input("Dame el dni del beneficiario")
+    cuben = CuentaBen(numero, dni)
+
+    # Insertar instancias para la relación depositante
+    insertStatementCuBen = session.prepare("INSERT INTO cuben(Cuenta_Numero, Beneficiario_DNI) VALUES (?, ?)")
+    session.execute(insertStatementCuBen, [cuben.Cuenta_Numero, cuben.Beneficiario_DNIPasaporte])
 
 
+# Parte 4: Actualización de datos
 
 
 
