@@ -205,7 +205,7 @@ def consultaDatosProductosPrecio():
 #Programa principal
 #Conexión con Cassandra
 cluster = Cluster()
-#cluster = Cluster(['192.168.0.1', '192.168.0.2'], port=..., ssl_context=...)
+cluster = Cluster(['192.168.0.1', '192.168.0.2'], port=..., ssl_context=...)
 session = cluster.connect('practica2')
 numero = -1
 #Sigue pidiendo operaciones hasta que se introduzca 0
