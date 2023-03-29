@@ -6,7 +6,6 @@
 
 # Importación de librerías necesarias para conexión con Cassandra y gestión de fechas
 from cassandra.cluster import Cluster
-from datetime import date
 
 
 # Parte 1: Definición de clases de las entidades y relaciones
@@ -231,25 +230,88 @@ def insertCuBen():
 
 # Parte 4: Actualización de datos
 
+# Parte 5: Consultas
+def consultaSucursalPorId():
+    id = input("Dame id de la sucursal")
+    sucursal = SoporteSucursal(id)
+    if sucursal != None: #si la sucursal no existe no mostramos nada
+        print("id: ", sucursal.Sucursal_id)
+        print("Nombre: ", sucursal)
+        print("Direccion: ", sucursal)
 
 
+def consultaClientePorDNI():
+    dni = input("Ingrese el dni")
+    cliente = SoporteBeneficiario(dni)
+    if cliente != None: # Si el cliente no existe no mostramos nada
+        print("DNI: ", cliente.Cliente_DNIPasaporte)
+        print("Nombre: ", cliente.Cliente_Nombre)
+        print("Ciudad: ", cliente.Cliente_Ciudad)
+        print("Calle: ", cliente.Cliente_Calle)
 
 
+def consultaCuentaPorNumero():
+    numero = int(input("Ingrese el número de cuenta"))
+    cuenta = SoporteCuenta(numero)
+    if cuenta != None: # Si el cliente no existe no mostramos nada
+        print("Número: ", cuenta.Cuenta_Numero)
+        print("Saldo: ", cuenta.Cuenta_Saldo)
+        print("Servicios: ", cuenta.Cuenta_Servicios)
+        print("ID Sucursal: ", cuenta.Sucursal_id)
 
 
-
-
-
-
-
-
-
-
-
-#Programa principal
-#Conexión con Cassandra
+# Programa principal
+# Conexión con Cassandra
 cluster = Cluster()
 cluster = Cluster(['127.0.0.1'], port=9042)
 session = cluster.connect('freddycarrion')
 numero = -1
+
+
+# Sigue pidiendo operaciones hasta que se introduzca 0
+while numero != 0:
+    print("Introduzca un número para ejecutar una de las siguientes operaciones:")
+    print("1. Insertar una Cuenta")
+    print("2. Insertar una Sucursal")
+    print("3. Insertar un Beneficiario")
+    print("4. Insertar relación entre cliente, cuenta y sucursal")
+    print("5. Insertar relación entre cuenta, cliente y beneficiario")
+    print("6. Insertar relación entre beneficiario, cuenta y sucursal")
+    print("7. Insertar relación entre cuenta y tarjeta (DetalleTar)")
+    print("8. Insertar relación entre cuenta y cliente (depositante)")
+    print("9. Insertar relación entre cuenta y beneficiario (CuBen)")
+    print("10. Consultar datos de un cliente según su dni")
+    print("11. Consultar datos de una sucursal según su id")
+    print("12. Consultar datos de una cuenta según su número")
+    #print ("8. Actualizar precio producto")
+    print("0. Cerrar aplicación")
+
+    numero = int(input())  # Pedimos numero al usuario
+    if numero == 1:
+        insertCuenta()
+    elif numero == 2:
+        insertSucursal()
+    elif numero == 3:
+        insertBeneficiario()
+    elif numero == 4:
+        insertClienteCuentaSucursal()
+    elif numero == 5:
+        insertCuentaClienteBeneficiario()
+    elif numero == 6:
+        insertBeneficiarioCuentaSucursal()
+    elif numero == 7:
+        insertDetalleTar()
+    elif numero == 8:
+        insertDepositante()
+    elif numero == 9:
+        insertCuBen()
+    elif numero == 10:
+        consultaClientePorDNI()
+    elif numero == 11:
+        consultaSucursalPorId()
+    elif numero == 12:
+        consultaCuentaPorNumero()
+    else:
+        print("Número incorrecto")
+cluster.shutdown()  # cerramos conexión
 

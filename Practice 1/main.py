@@ -167,7 +167,7 @@ def actualizarPrecioProducto ():
 def consultaClientePorId():
     id = int (input ("Dame id del cliente a consultar"))
     cliente = extraerDatosCliente (id)
-    if (cliente != None): #si el cliente no existe no mostramos nada
+    if cliente != None: #si el cliente no existe no mostramos nada
         print ("DNI: ", cliente.DNI)
         print ("Nombre: ", cliente.Nombre)
         print ("Direccion: ", cliente.Direccion)
