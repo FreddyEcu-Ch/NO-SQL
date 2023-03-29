@@ -11,7 +11,7 @@ from datetime import date
 
 # Parte 1: Definición de clases de las entidades y relaciones
 class Sucursal:
-    def __init__(self, Nombre, Ciudad, Activo, id):  # Constructor de entidad Sucursal
+    def __init__(self, id, Nombre, Ciudad, Activo):  # Constructor de entidad Sucursal
         self.Nombre = Nombre
         self.Ciudad = Ciudad
         self.Activo = Activo
@@ -19,7 +19,7 @@ class Sucursal:
 
 
 class Cuenta:
-    def __init__(self, Numero, Saldo, Servicios):  # Constructor con relación 1:n entre Sucursal y Cuenta
+    def __init__(self, Numero, Saldo, Servicios, id):  # Constructor con relación 1:n entre Sucursal y Cuenta
         self.Numero = Numero
         self.Saldo = Saldo
         self.Servicios = Servicios
@@ -79,4 +79,69 @@ class Prestamo:
 
 
 # Parte 2: Creación de tablas soporte
+def SoporteBeneficiario(DNIPasaporte):
+    select = session.prepare("SELECT * FROM beneficiario_por_id WHERE id = ?")  # solo va a devolver una filia pero lo tratamos como si fuesen varias
+    filas = session.execute (select, [DNIPasaporte, ])   # Importante, aunque solo haya un valor a reemplazar en el preparedstatemente, hay que poner la ','
+    for fila in filas:
+        c = Cliente(DNIPasaporte, fila.nombre, fila.calle,  fila.ciudad)  # creamos instancia del cliente
+        return c
+
+
+def SoporteCuenta(Numero):
+    select = session.prepare("SELECT * FROM cuenta_por_numero WHERE numero = ?")  # solo va a devolver una filia pero lo tratamos como si fuesen varias
+    filas = session.execute (select, [Numero, ])   # Importante, aunque solo haya un valor a reemplazar en el preparedstatemente, hay que poner la ','
+    for fila in filas:
+        cu = Cuenta(Numero, fila.saldo, fila.servicios, fila.id)  # creamos instancia de la cuenta
+        return cu
+
+
+def SoporteSucursal(id):
+    select = session.prepare("SELECT * FROM sucursal_por_id WHERE id = ?")  # solo va a devolver una filia pero lo tratamos como si fuesen varias
+    filas = session.execute (select, [id, ])   # Importante, aunque solo haya un valor a reemplazar en el preparedstatemente, hay que poner la ','
+    for fila in filas:
+        s = Cuenta(id, fila.nombre, fila.ciudad, fila.activo)  # creamos instancia de las sucursales
+        return s
+
+
+# Parte 3: Métodos para inserción de datos
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Programa principal
+#Conexión con Cassandra
+cluster = Cluster()
+cluster = Cluster(['127.0.0.1'], port=9042)
+session = cluster.connect('freddycarrion')
+numero = -1
 
