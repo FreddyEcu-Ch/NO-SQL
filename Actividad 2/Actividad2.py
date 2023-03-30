@@ -230,6 +230,23 @@ def insertCuBen():
 
 # Parte 4: Actualización de datos
 
+# Función para actualizar el número de cuenta y servicio basándonos en el número de cuenta (Consulta 7)
+def actualizarNumeroCuenta():
+    numero = int(input("Dame el número de cuenta"))
+    servicios = set()  # iniciamos la colección (set) que contendrá los servicios a insertar
+    servicio = input("Introduzca un servicio, vacío para parar")
+    while servicio != "":
+        servicios.add(servicio)
+        servicio = input("Introduzca un servicio, vacío para parar")
+    infoCuenta = SoporteCuenta(numero)  # tenemos que saber que número de cuenta requiere ser actualizado
+
+    if infoCuenta != None:  # Comprobar que el número de cuenta este introducido en la BBDD, si no lo está, no ejecutamos ninguna operación.
+        borrarNumero = session.prepare("DELETE FROM tabla7 WHERE  Cuenta_Numero= ? AND Cuenta_Servicios= ?")
+        session.execute(borrarNumero, [infoCuenta.Cuenta_Numero, infoCuenta.Cuenta_Servicios])
+        insertStatement = session.prepare("INSERT INTO tabla7(precio, idproducto, existencias, nombre) VALUES (?, ?, ?, ?)")
+        session.execute(insertStatement, [numero, servicio])
+
+
 # Parte 5: Consultas
 def consultaSucursalPorId():
     id = input("Dame id de la sucursal")
