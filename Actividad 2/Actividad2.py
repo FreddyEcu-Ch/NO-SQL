@@ -302,7 +302,7 @@ while numero != 0:
     print("10. Consultar datos de un cliente según su dni")
     print("11. Consultar datos de una sucursal según su id")
     print("12. Consultar datos de una cuenta según su número")
-    #print("13. Actualizar precio producto")
+    print("13. Actualizar Número de cuenta o servicio")
     print("0. Cerrar aplicación")
 
     numero = int(input())  # Pedimos numero al usuario
@@ -330,6 +330,8 @@ while numero != 0:
         consultaSucursalPorId()
     elif numero == 12:
         consultaCuentaPorNumero()
+    elif numero == 13:
+        actualizarNumeroCuenta()
     else:
         print("Número incorrecto")
 cluster.shutdown()  # cerramos conexión
