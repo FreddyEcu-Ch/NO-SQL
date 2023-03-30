@@ -98,7 +98,7 @@ def SoporteSucursal(id):
     select = session.prepare("SELECT * FROM sucursal_por_id WHERE id = ?")  # solo va a devolver una filia pero lo tratamos como si fuesen varias
     filas = session.execute(select, [id, ])   # Importante, aunque solo haya un valor a reemplazar en el preparedstatemente, hay que poner la ','
     for fila in filas:
-        s = Cuenta(id, fila.nombre, fila.ciudad, fila.activo)  # creamos instancia de las sucursales
+        s = Sucursal(id, fila.nombre, fila.ciudad, fila.activo)  # creamos instancia de las sucursales
         return s
 
 
@@ -236,8 +236,9 @@ def consultaSucursalPorId():
     sucursal = SoporteSucursal(id)
     if sucursal != None: #si la sucursal no existe no mostramos nada
         print("id: ", sucursal.Sucursal_id)
-        print("Nombre: ", sucursal)
-        print("Direccion: ", sucursal)
+        print("Nombre: ", sucursal.Sucursal_Nombre)
+        print("Ciudad: ", sucursal.Sucursal_Ciudad)
+        print("Activo: ", sucursal.Sucursal_Activo)
 
 
 def consultaClientePorDNI():
@@ -253,7 +254,7 @@ def consultaClientePorDNI():
 def consultaCuentaPorNumero():
     numero = int(input("Ingrese el número de cuenta"))
     cuenta = SoporteCuenta(numero)
-    if cuenta != None: # Si el cliente no existe no mostramos nada
+    if cuenta != None: # Si la cuenta no existe no mostramos nada
         print("Número: ", cuenta.Cuenta_Numero)
         print("Saldo: ", cuenta.Cuenta_Saldo)
         print("Servicios: ", cuenta.Cuenta_Servicios)
@@ -268,6 +269,7 @@ session = cluster.connect('freddycarrion')
 numero = -1
 
 
+# Parte 6: Interfaz de interacción de usuario
 # Sigue pidiendo operaciones hasta que se introduzca 0
 while numero != 0:
     print("Introduzca un número para ejecutar una de las siguientes operaciones:")
@@ -283,7 +285,7 @@ while numero != 0:
     print("10. Consultar datos de un cliente según su dni")
     print("11. Consultar datos de una sucursal según su id")
     print("12. Consultar datos de una cuenta según su número")
-    #print ("8. Actualizar precio producto")
+    #print("13. Actualizar precio producto")
     print("0. Cerrar aplicación")
 
     numero = int(input())  # Pedimos numero al usuario
